@@ -1,0 +1,41 @@
+@import "tailwindcss"; /* A diretiva correta para a sua versão */
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+/* Nossas variáveis de tema */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 229, 231, 235;        /* text-primary */
+    --background-start-rgb: 18, 18, 18;     /* background */
+    --background-end-rgb: 18, 18, 18;       /* background */
+    
+    /* NOVAS VARIÁVEIS PARA O NOSSO TEMA */
+    --surface-rgb: 30, 30, 30;              /* Cor para os cards e sidebars */
+    --border-rgb: 55, 65, 81;               /* Cor para as bordas */
+    --primary-rgb: 16, 185, 129;            /* Nosso verde primário */
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+/* Esconde as setas de aumento/diminuição nos campos de número */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield; /* Para o Firefox */
+}
