@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Switch } from './Switch';
 
 const CloseIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" /></svg>);
-  
+
 type ModalProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -12,6 +12,8 @@ type ModalProps = {
 
 export function ModalAdicionarEntrada({ isOpen, onClose }: ModalProps) {
   const [tipoEntrada, setTipoEntrada] = useState<'normal' | 'protecao'>('normal');
+  const [modalidade, setModalidade] = useState<'back' | 'lay'>('back');
+  const [casaDeAposta, setCasaDeAposta] = useState('');
 
   if (!isOpen) return null;
 
@@ -38,6 +40,18 @@ export function ModalAdicionarEntrada({ isOpen, onClose }: ModalProps) {
               <input type="text" id="titulo" className={`mt-1 block w-full bg-zinc-800 border-border rounded-md p-2 text-text-primary focus:outline-none focus:ring-2 ${corFoco}`} />
             </div>
 
+            <div>
+              <label htmlFor="casa" className="block text-sm font-medium text-text-secondary">Casa de Aposta</label>
+              <input
+                type="text"
+                id="casa"
+                placeholder="ex: Bet365"
+                value={casaDeAposta}
+                onChange={(e) => setCasaDeAposta(e.target.value)}
+                className={`mt-1 block w-full bg-zinc-800 border-border rounded-md p-2 text-text-primary focus:outline-none focus:ring-2 ${corFoco}`}
+              />
+            </div>
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label htmlFor="stake" className="block text-sm font-medium text-text-secondary">Stake (R$)</label>
@@ -49,30 +63,37 @@ export function ModalAdicionarEntrada({ isOpen, onClose }: ModalProps) {
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-4 pt-2">
-              <div className="flex flex-col items-center col-span-1">
+            <div className="col-span-2">
+              <label htmlFor="status" className="block text-sm font-medium text-text-secondary">Status</label>
+              <select id="status" className={`mt-1 block w-full bg-zinc-800 border-border rounded-md p-2 text-text-primary focus:outline-none focus:ring-2 ${corFoco}`}>
+                <option>Pendente</option>
+                <option>Ganha</option>
+                <option>Perdida</option>
+                <option>Anulada</option>
+              </select>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 pt-2">
+              <div className="flex flex-col items-center">
                 <label className="block text-sm font-medium text-text-secondary mb-2">Tipo</label>
-                <Switch 
-                    onToggle={(isNormal) => setTipoEntrada(isNormal ? 'normal' : 'protecao')} 
-                    themeColor={tipoEntrada}
-                />
+                <Switch onToggle={(isNormal) => setTipoEntrada(isNormal ? 'normal' : 'protecao')} themeColor={tipoEntrada} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-text-secondary mb-2 text-center">Modalidade</label>
+                <div className="flex items-center justify-center gap-2 mt-1 rounded-md bg-zinc-800 p-1">
+                  <button type="button" onClick={() => setModalidade('back')} className={`cursor-pointer w-full rounded p-1 text-sm font-semibold ${modalidade === 'back' ? 'bg-emerald-600 text-white' : 'hover:bg-zinc-700'}`}>A Favor (Back)</button>
+                  <button type="button" onClick={() => setModalidade('lay')} className={`cursor-pointer w-full rounded p-1 text-sm font-semibold ${modalidade === 'lay' ? 'bg-orange-500 text-white' : 'hover:bg-zinc-700'}`}>Contra (Lay)</button>
                 </div>
-              <div className="col-span-2">
-                <label htmlFor="status" className="block text-sm font-medium text-text-secondary">Status</label>
-                <select id="status" className={`mt-2 block w-full bg-zinc-800 border-border rounded-md p-2 text-text-primary focus:outline-none focus:ring-2 ${corFoco}`}>
-                  <option>Pendente</option>
-                  <option>Ganha</option>
-                  <option>Perdida</option>
-                  <option>Anulada</option>
-                </select>
               </div>
             </div>
+
           </div>
 
           <div className="mt-6 flex justify-end gap-4">
             <button type="button" onClick={onClose} className="cursor-pointer px-4 py-2 text-sm font-medium text-text-secondary rounded-md hover:bg-zinc-700">Cancelar</button>
             <button type="submit" className={`cursor-pointer px-4 py-2 text-sm font-medium text-white rounded-md ${corBotao}`}>Salvar Entrada</button>
           </div>
+
         </form>
       </div>
     </div>

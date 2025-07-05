@@ -28,7 +28,7 @@ export function CardCasa(props: CardCasaProps) {
   const [senhaVisivel, setSenhaVisivel] = useState(false);
 
   return (
-    <div className="bg-zinc-800 p-3 rounded-lg border border-zinc-700 mb-3">
+    <div className="bg-zinc-800 p-3 rounded-lg border border-zinc-700 mb-3 overflow-hidden">
       <h3 className="font-bold text-emerald-500">{props.nome}</h3>
       
       {props.usuario && (
@@ -38,10 +38,10 @@ export function CardCasa(props: CardCasaProps) {
       )}
 
       {props.senha && (
-        <div className="text-sm text-zinc-400 mt-1 flex items-center gap-2">
-          <span>Senha:</span>
+        <div className="text-sm text-zinc-400 mt-1 flex flex-wrap items-center gap-1">
+          <span>Senha: </span>
           <span className="font-mono text-zinc-200 tracking-wider">
-            {senhaVisivel ? props.senha : '••••••••'}
+            {senhaVisivel ? props.senha : '•••••'}
           </span>
           <button 
             onClick={() => setSenhaVisivel(!senhaVisivel)} 
