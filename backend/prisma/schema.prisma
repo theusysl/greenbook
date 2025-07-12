@@ -1,0 +1,99 @@
+// Este é o "dialeto" do banco de dados que vamos usar.
+// O provider é o SQLite, como planejamos.
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Isso diz ao Prisma para gerar um cliente TypeScript para nós.
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Nossos ENUMS (tipos pré-definidos)
+enum BetType {
+  BACK
+  LAY
+}
+
+enum EntryType {
+  NORMAL
+  PROTECTION
+}
+
+enum Status {
+  PENDING
+  WON
+  LOST
+  VOID // Anulada
+}
+
+
+// --- NOSSOS MODELOS (TABELAS) ---
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relações: Um usuário tem muitas casas, grupos e entradas
+  bookmakers Bookmaker[]
+  betGroups  BetGroup[]
+  entries    Entry[]
+}
+
+model Bookmaker {
+  id                String  @id @default(cuid())
+  name              String
+  login             String?
+  encryptedPassword String?
+  minDeposit        Float?
+  minWithdrawal     Float?
+
+  // Relação: Pertence a um usuário
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  // Relação: Uma casa pode ter muitas entradas
+  entries Entry[]
+}
+
+model BetGroup {
+  id        String   @id @default(cuid())
+  name      String?
+  createdAt DateTime @default(now())
+
+  // Relação: Pertence a um usuário
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  // Relação: Um grupo tem muitas entradas
+  entries Entry[]
+}
+
+model Entry {
+  id           String    @id @default(cuid())
+  betType      BetType   // ex: BACK ou LAY
+  entryType    EntryType // ex: NORMAL ou PROTECTION
+  title        String
+  stake        Float
+  odds         Float
+  liability    Float?    // Responsabilidade (só para apostas LAY)
+  status       Status    @default(PENDING)
+  betDate      DateTime  @default(now())
+
+  // Relação: Pertence a um usuário
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  // Relação: Pertence a um grupo de aposta
+  betGroup   BetGroup @relation(fields: [betGroupId], references: [id])
+  betGroupId String
+
+  // Relação: Foi feita em uma casa de aposta
+  bookmaker   Bookmaker @relation(fields: [bookmakerId], references: [id])
+  bookmakerId String
+}
